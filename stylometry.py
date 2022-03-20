@@ -1,11 +1,23 @@
 # coding=utf8
 import nltk
-import time
 from nltk.corpus import stopwords
 import matplotlib.pyplot as plt
 
 LINES = ['-',':','--']
 #Style lini do wykresów
+
+def jaccard_test(words_by_author,len_shortest_corpus):
+    jaccard_by_author = dict()
+    unique_words_unknow = set(words_by_author['unknows'][:len_shortest_corpus])
+    authors = (author for author in words_by_author if author != 'unknown')
+    for author in authors:
+        unique_words_author = set(words_by_author[author][:len_shortest_corpus])
+        shared_words = unique_words_author.intersection(unique_words_unknow)
+        jaccard_sim = (float(len(shared_words)) / (len(unique_words_author)+ len(unique_words_unknow) - len(shared_words) ) )
+        jaccard_by_author[author] = jaccard_sim
+        print('Indeks Jaccarda dla klucza {} = {}'.format(author,jaccard_sim))
+    most_likley_author = max(jaccard_by_author, key=jaccard_by_author.get)
+    print("Biorać pod uwagę prawdopodobienstwo, autorem jest: {} ".format(most_likley_author))
 
 def vocab_test(words_by_author):
     chisquared_by_author = dict()
